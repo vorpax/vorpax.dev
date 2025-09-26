@@ -1,4 +1,5 @@
-import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
+import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
+import { BookIcon, Rss, Salad } from "lucide-react";
 
 /**
  * Shared layout configurations
@@ -20,11 +21,22 @@ export function baseOptions(): BaseLayoutProps {
           >
             <circle cx={12} cy={12} r={12} fill="currentColor" />
           </svg>
-          My App
+          vorpax.dev
         </>
       ),
     },
     // see https://fumadocs.dev/docs/ui/navigation/links
-    links: [],
+    links: [
+      {
+        icon: <BookIcon />,
+        text: "Docs",
+        url: "/docs",
+      },
+      {
+        icon: <Rss />,
+        text: "Blog",
+        url: "/blog",
+      }
+    ],
   };
 }

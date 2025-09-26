@@ -13,6 +13,10 @@
 /build
 *.tsbuildinfo
 
+
+.obsidian
+
+
 # misc
 .DS_Store
 *.pem
