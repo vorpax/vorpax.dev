@@ -7,25 +7,25 @@ import {
 } from "fumadocs-ui/page";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { docSource } from "@/lib/source";
+import { docsSource } from "@/lib/source";
 import { getMDXComponents } from "@/mdx-components";
 
 export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   const params = await props.params;
-  const page = docSource.getPage(params.slug);
+  const page = docsSource.getPage(params.slug);
   if (!page) notFound();
 
-  const MDXContent = page.data.body;
+  const MdxContent = page.data.body;
 
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
       <DocsBody>
-        <MDXContent
+        <MdxContent
           components={getMDXComponents({
             // this allows you to link to other pages with relative file paths
-            a: createRelativeLink(docSource, page),
+            a: createRelativeLink(docsSource, page),
           })}
         />
       </DocsBody>
@@ -34,14 +34,14 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
 }
 
 export async function generateStaticParams() {
-  return docSource.generateParams();
+  return docsSource.generateParams();
 }
 
 export async function generateMetadata(
   props: PageProps<"/docs/[[...slug]]">,
 ): Promise<Metadata> {
   const params = await props.params;
-  const page = docSource.getPage(params.slug);
+  const page = docsSource.getPage(params.slug);
   if (!page) notFound();
 
   return {

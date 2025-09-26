@@ -15,6 +15,7 @@
 
 
 .obsidian
+.open-next
 
 
 # misc
@@ -30,3 +31,7 @@ yarn-error.log*
 .env*.local
 .vercel
 next-env.d.ts
+src/app/docs/\[\[...slug]]/page.tsx
+.gitignore
+.env
+.envrc
