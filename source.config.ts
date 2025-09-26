@@ -1,23 +1,30 @@
 import {
   defineConfig,
   defineDocs,
+  defineCollections,
   frontmatterSchema,
-  metaSchema,
 } from "fumadocs-mdx/config";
+import { z } from "zod";
 
-// You can customise Zod schemas for frontmatter and `meta.json` here
-// see https://fumadocs.dev/docs/mdx/collections#define-docs
-export const docs = defineDocs({
-  docs: {
-    schema: frontmatterSchema,
-  },
-  meta: {
-    schema: metaSchema,
-  },
+// Justification : Conforme à l'extrait "Configure Multiple Content Types".
+// On utilise defineDocs pour la documentation afin de bénéficier de la gestion des `meta.json`.
+export const { docs, meta } = defineDocs({
+  dir: "content/docs",
+});
+
+// Justification : Conforme au même extrait.
+// On utilise defineCollections pour le blog, avec un schéma étendu pour inclure l'auteur et la date.
+export const blog = defineCollections({
+  type: "doc",
+  dir: "content/blog",
+  schema: frontmatterSchema.extend({
+    author: z.string().default("Alexandre"),
+    date: z.string().date().or(z.date()).optional(),
+  }),
 });
 
 export default defineConfig({
   mdxOptions: {
-    // MDX options
+    // Options MDX
   },
 });

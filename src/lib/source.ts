@@ -1,9 +1,19 @@
-import { docs } from '@/.source';
-import { loader } from 'fumadocs-core/source';
+import { loader } from "fumadocs-core/source";
+import { createMDXSource } from "fumadocs-mdx";
+import { docs, meta, blog as blogPosts } from ".source";
+import type { InferPageType } from "fumadocs-core/source";
 
-// See https://fumadocs.vercel.app/docs/headless/source-api for more info
-export const docSource = loader({
-  // it assigns a URL to your pages
-  baseUrl: '/docs',
-  source: docs.toFumadocsSource(),
+// Renommé en 'docsSource' pour plus de clarté
+export const docsSource = loader({
+  baseUrl: "/docs",
+  source: createMDXSource(docs, meta),
 });
+
+export const blogSource = loader({
+  baseUrl: "/blog",
+  source: createMDXSource(blogPosts),
+});
+
+// Correction : Utiliser 'docsSource' au lieu de 'source' qui n'existe pas.
+export type Page = InferPageType<typeof docsSource>;
+export type BlogPage = InferPageType<typeof blogSource>;
