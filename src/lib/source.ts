@@ -3,7 +3,7 @@ import { createMDXSource } from "fumadocs-mdx";
 import { docs, meta, blog as blogPosts } from ".source";
 import type { InferPageType } from "fumadocs-core/source";
 
-// Renommé en 'docsSource' pour plus de clarté
+
 export const docsSource = loader({
   baseUrl: "/docs",
   source: createMDXSource(docs, meta),
@@ -14,6 +14,6 @@ export const blogSource = loader({
   source: createMDXSource(blogPosts),
 });
 
-// Correction : Utiliser 'docsSource' au lieu de 'source' qui n'existe pas.
+
 export type Page = InferPageType<typeof docsSource>;
 export type BlogPage = InferPageType<typeof blogSource>;

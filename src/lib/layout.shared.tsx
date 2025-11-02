@@ -36,7 +36,12 @@ export function baseOptions(): BaseLayoutProps {
         icon: <Rss />,
         text: "Blog",
         url: "/blog",
+      },
+      {
+        text: "About Me",
+        url: "/about",
       }
+
     ],
   };
 }
