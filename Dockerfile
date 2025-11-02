@@ -1,75 +1,24 @@
-# syntax=docker.io/docker/dockerfile:1
+FROM node:lts-alpine AS base
 
-FROM node:25-alpine AS base
-
-# Install dependencies only when needed
+# Stage 1: Install dependencies
 FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat bash
-SHELL ["/bin/bash", "-c"]
 WORKDIR /app
+COPY package.json pnpm-lock.yaml pnpm-lock.yaml* .npmrc* source.config.ts tsconfig.json ./
+RUN corepack enable pnpm && pnpm install --frozen-lockfile
 
-RUN touch $(echo $HOME/.bashrc)
-RUN export ENV=$(echo $HOME/.bashrc); wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash -
-ENV PNPM_HOME="/root/.local/share/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-# Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* source.config.ts tsconfig.json ./
-#RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash -
-RUN which pnpm
-RUN \
-    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-    elif [ -f package-lock.json ]; then npm ci; \
-    elif [ -f pnpm-lock.yaml ]; then  pnpm i --frozen-lockfile; \
-    else echo "Lockfile not found." && exit 1; \
-    fi
-
-# Rebuild the source code only when needed
+# Stage 2: Build the application
 FROM base AS builder
 WORKDIR /app
-ENV HOME="/root"
-ENV ENV="$HOME/.bashrc"
-ENV PNPM_HOME="/root/.local/share/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN corepack enable pnpm && pnpm run build
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN /root/.local/share/pnpm run build; 
-
-# Production image, copy all the files and run next
+# Stage 3: Production server
 FROM base AS runner
 WORKDIR /app
-SHELL ["/bin/bash", "-c"]
 ENV NODE_ENV=production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-ENV NEXT_TELEMETRY_DISABLED=1
-
-SHELL ["/bin/sh", "-c"]
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-SHELL ["/bin/bash", "-c"]
-COPY --from=builder /app/public ./public
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
-
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
-
-ENV PORT=3000
-
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
-ENV HOSTNAME="0.0.0.0"
 CMD ["node", "server.js"]
