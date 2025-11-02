@@ -6,3 +6,7 @@ services:
       - public
     ports:
       - "3000:3000"
+networks:
+  public:
+    name: public
+    external: true
