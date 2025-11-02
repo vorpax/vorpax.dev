@@ -1,0 +1,8 @@
+services:
+  app:
+    build: .
+    container_name: "vorpax-dot-dev"
+    networks:
+      - public
+    ports:
+      - "3000:3000"
