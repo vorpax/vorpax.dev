@@ -1,41 +1,61 @@
 ---
-title: A lightweight Windows install, really ?
+title: "A lightweight Windows install, really ?"
 description: "How I usually manage to install Windows without all the bloatware."
-authors:
-  - vorpax@
+
 ---
 
 
-## Installing windows offline : A great beginning
 
-Microsoft asks you to connect to the internet in order to login to your Microsoft account, and then install Windows, there.
-There's an other way around : disconnect your computer from the internet.
+## 1. Escaping the Microsoft Account Trap
 
-Then it's gonna complain.
+Microsoft increasingly pressures users to connect to a Microsoft Account (MSA) during the Windows 11 Out-of-Box Experience (OOBE). For a lightweight and privacy-focused install, we need to bypass this requirement by forcing an offline setup.
 
-But by pressing Shift + F10 and the following command, you can still create a local account.
+While the older OOBE\BYPASSNRO command is often referenced, it is now deprecated or unreliable. The most consistent workaround is to disconnect the installation environment from the network entirely:
 
-```shell
+Disconnect: Ensure your computer is physically disconnected from the internet (unplug Ethernet or disable Wi-Fi on the installation machine).
+
+Trigger Command Prompt: When the setup prompts you to connect to a network, press Shift + F10 to open the Command Prompt.
+
+Force Local Account: Execute the following command:
+
+<Pre language="powershell">
 start ms-cxh:localonly
-```
+</Pre>
 
-You might know the famous `OOBE\BYPASSNRO` command, but it doesn't work anymore...
+The installer will complain about the lack of connection but should now proceed directly to creating a local user account, allowing you to finalize the installation free of the immediate MSA requirement.
 
-## Quickly setup your new OS:
+## 2. Essential CLI Setup with Winget
 
-First, there is Winget which is Windows CLI package manager. It enables you to install packages and applications the same way you would do it with apt for Debian-based distros.
+Once the OS is installed and you're logged into your new local account, the first step is enabling command-line package management.
+
+Winget is Windows' native CLI package manager, mirroring tools like apt (Debian/Ubuntu) or brew (macOS). It’s invaluable for quickly installing and updating common developer tools and applications.
+
+I recommend replacing the default browser right away. Microsoft Edge is functional, but Ungoogled Chromium offers a cleaner, more private experience from the start.
+
+### 3. Automated Debloat and Tuning
+
+Instead of manually digging through settings and uninstalling apps, the community has provided excellent automation scripts. 
+
+The most famous is probably Chris Titus Tech's "[https://christitus.com/win](https://christitus.com/win)", which is highly regarded for its comprehensive, single-click approach to debloating, installing apps, and applying privacy tweaks.
+
+To run the utility:
+
+Open Elevated PowerShell: Find PowerShell, then hold Ctrl + Shift while Left-Clicking it to run it as an Administrator. (Avoid using the older PowerShell ISE environment).
+
+Execute Script: Run the following command:
+
+<Pre language="powershell">
+irm https://christitus.com/win  | iex
+</Pre>
+
+This script will launch a graphical interface where you can select exactly which bloatware to remove, which essential drivers and utilities to install, and apply dozens of system tweaks to make Windows less intrusive.
 
 
-I usually install ungoogled-chromium as Edge is still a pain to work with.
 
-Then I juste use https://github.com/ChrisTitusTech/winutil and the following PowerShell command (please make sure to run it as admin by doing Left-Click and holding Ctrl + Shift, then selecting PowerShell (preferably not the ISE one)) :
-
-```powershell
-irm "https://christitus.com/win" | iex
-```
+If you are trying to debloat an already running system, I greatly recommend you to check Bulk Crap Uninstaller (BCU)
 
 
-This script will help you install a lot of useful applications and tweak Windows settings to make it less intrusive.
 
-Then I usually install Powertoys which is a great set of utilities to enhance Windows experience.
+## 4. The Finishing Touch: PowerToys
 
+For productivity, (Microsoft PowerToys)[https://github.com/microsoft/PowerToys] is a must-install utility suite. It provides a set of highly useful tools that significantly enhance the Windows experience for power users.

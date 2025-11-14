@@ -10,15 +10,14 @@ const preComponent = ({ ref: _ref, ...props }: { ref?: React.Ref<any>; children?
       </CodeBlock>
     );
 
-
-
-
 // use this function to get MDX components, you will need it for rendering MDX
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
     ...defaultMdxComponents,
     ...components,
-    pre: preComponent 
+    pre: preComponent,
+    Pre : preComponent,
+    CodeBlock
   };
 }
 

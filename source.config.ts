@@ -22,7 +22,6 @@ export const blog = defineCollections({
 
 export default defineConfig({
   mdxOptions: {
-
-    // MDX options
+    // Shiki syntax highlighting is enabled by default in fumadocs-mdx
   },
 });
