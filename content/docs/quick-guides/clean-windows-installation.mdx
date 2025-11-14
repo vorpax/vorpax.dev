@@ -1,0 +1,41 @@
+---
+title: A lightweight Windows install, really ?
+description: "How I usually manage to install Windows without all the bloatware."
+authors:
+  - vorpax@
+---
+
+
+## Installing windows offline : A great beginning
+
+Microsoft asks you to connect to the internet in order to login to your Microsoft account, and then install Windows, there.
+There's an other way around : disconnect your computer from the internet.
+
+Then it's gonna complain.
+
+But by pressing Shift + F10 and the following command, you can still create a local account.
+
+```shell
+start ms-cxh:localonly
+```
+
+You might know the famous `OOBE\BYPASSNRO` command, but it doesn't work anymore...
+
+## Quickly setup your new OS:
+
+First, there is Winget which is Windows CLI package manager. It enables you to install packages and applications the same way you would do it with apt for Debian-based distros.
+
+
+I usually install ungoogled-chromium as Edge is still a pain to work with.
+
+Then I juste use https://github.com/ChrisTitusTech/winutil and the following PowerShell command (please make sure to run it as admin by doing Left-Click and holding Ctrl + Shift, then selecting PowerShell (preferably not the ISE one)) :
+
+```powershell
+irm "https://christitus.com/win" | iex
+```
+
+
+This script will help you install a lot of useful applications and tweak Windows settings to make it less intrusive.
+
+Then I usually install Powertoys which is a great set of utilities to enhance Windows experience.
+

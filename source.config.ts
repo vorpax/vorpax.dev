@@ -3,6 +3,7 @@ import {
   defineDocs,
   defineCollections,
   frontmatterSchema,
+  
 } from "fumadocs-mdx/config";
 import { z } from "zod";
 
@@ -21,6 +22,7 @@ export const blog = defineCollections({
 
 export default defineConfig({
   mdxOptions: {
+
     // MDX options
   },
 });
